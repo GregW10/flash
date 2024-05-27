@@ -9,9 +9,11 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <unistd.h>
+#include <signal.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <inttypes.h>
+#include <errno.h>
 
 #define KILOBYTE 1024
 #define MEGABYTE 1048576
@@ -112,7 +114,18 @@ void parse_argv(int argc,
     }
 }
 
-void flash_iso(const char *usb, const char *iso, uint64_t bsize) {
-
+void zero_mem(void *mem, uint64_t count) {
+    uint64_t rem;
+    char *p = mem;
+    if ((rem = count % sizeof(uint64_t))) {
+        rem = sizeof(uint64_t) - rem;
+        count -= rem;
+        while (rem --> 0)
+            *p++ = 0;
+    }
+    uint64_t *ptr = (uint64_t*) p;
+    count /= 8;
+    while (count --> 0)
+        *ptr++ = 0;
 }
 #endif

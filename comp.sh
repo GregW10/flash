@@ -1,4 +1,4 @@
 #!/bin/bash
 
-gcc -std=c17 main.c -o main
+gcc -std=c17 -O3 main.c -o main
 
